@@ -26,7 +26,7 @@ history = ''
 
 setup(
     name='bupper',
-    version='0.1.1',
+    version='0.1.2',
     description='Very simple backup application intended to be run on '
                 'cron to allow user-controllable remote backups',
     long_description=readme + '\n\n' + doclink + '\n\n' + history,
