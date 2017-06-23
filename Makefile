@@ -43,7 +43,7 @@ coverage:
 	coverage html
 	open htmlcov/index.html
 
-bump-and-push: test lint
+bump-and-push: test lint build-readme
 	bumpversion patch
 	git push
 	git push --tags
