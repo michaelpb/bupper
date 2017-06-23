@@ -84,8 +84,10 @@ class TestUtils(MockTimeBase):
 
     def test_get_backup_archive_filename(self):
         get = utils.get_backup_archive_filename
-        assert get('ISO', '/asdf/jkl;') == '2017-02-03T04:05__asdf--jkl;.tar.gz'
-        assert get('lol', '/asdf/test--dir/') == 'lol__asdf--test----dir.tar.gz'
+        assert get('ISO', '/asdf/jkl;') == \
+            '2017-02-03T04:05__asdf--jkl;.tar.gz'
+        assert get('lol', '/asdf/test--dir/') == \
+            'lol__asdf--test----dir.tar.gz'
 
 
 class TestParseArgs(BlankEnvironBase):
@@ -93,7 +95,7 @@ class TestParseArgs(BlankEnvironBase):
         args = bupper.parse_args([])
         assert args.source == '~'
         assert args.local == '/var/tmp/bupper/'
-        assert args.remote == None
+        assert args.remote is None
         assert args.date_format == 'ISO'
         assert not args.verbose
 

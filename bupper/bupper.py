@@ -29,7 +29,7 @@ def parse_args(argv):
                         default='ISO')
     parser.add_argument('-v', '--verbose', help='increase output verbosity',
                         action='store_true')
-    parser.add_argument('-s', '--source', help='source directory to recursively'
+    parser.add_argument('-s', '--source', help='source directory to '
                         ' scan for bupper configs', default=source_dir)
     parser.add_argument('-l', '--local', help='local storage of backups',
                         default=local_dir)
@@ -112,7 +112,7 @@ def do_scp(local, remote):
 def main(args):
     try:
         check_args(args)
-    except ArgError:
+    except ValueError:
         parser.print_usage()
         sys.exit(1)
 
