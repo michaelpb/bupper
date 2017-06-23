@@ -3,7 +3,6 @@ Tests for `bupper` module.
 '''
 import os
 from os.path import join, exists
-import pytest
 import tempfile
 import datetime
 from unittest.mock import patch
@@ -13,6 +12,7 @@ from bupper import bupper, utils
 # '2017-02-03T04:05:06.000007'
 
 MOCK_TIME = datetime.datetime(2017, 2, 3, 4, 5, 6, 7)
+
 
 class MockTimeBase:
     @classmethod
@@ -60,7 +60,8 @@ class BlankEnvironBase:
 class TestUtils(MockTimeBase):
     def test_without_duplicates(self):
         assert list(utils.without_duplicates('asdf')) == ['a', 's', 'd', 'f']
-        assert list(utils.without_duplicates('assddfsfddsfafdsa')) == ['a', 's', 'd', 'f']
+        assert list(utils.without_duplicates(
+            'assddfsfddsfafdsa')) == ['a', 's', 'd', 'f']
 
     def test_bup_slug(self):
         bup_slug = utils.backup_filename_slug
@@ -80,7 +81,6 @@ class TestUtils(MockTimeBase):
         get = utils.get_datetime_string
         assert get('ISO') == '2017-02-03T04:05'
         assert get('%Y test') == '2017 test'
-
 
     def test_get_backup_archive_filename(self):
         get = utils.get_backup_archive_filename
@@ -130,7 +130,6 @@ class TestParseArgs(BlankEnvironBase):
             'home' in args.source or  # linux
             'Users' in args.source    # macOS
         )
-
 
 
 def write_tmp_file(path):

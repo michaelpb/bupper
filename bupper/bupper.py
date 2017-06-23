@@ -17,7 +17,7 @@ CONF_FILES = (
 def parse_args(argv):
     global parser
     parser = argparse.ArgumentParser(
-        prog='stowage',
+        prog='bupper',
         description='Simple backup script, no diffing or anything fancy.'
     )
 
@@ -60,6 +60,7 @@ def check_args(args):
     args.source = os.path.expanduser(args.source)
     args.local = os.path.expanduser(args.local)
 
+
 def do_backup(args, path):
     # Create local archive
     filename = utils.get_backup_archive_filename(args.date_format, path)
@@ -99,6 +100,7 @@ def do_local(source_path, local_path):
     if _is_verbose:
         print('TAR ----\n%s\n----\n' % output)
 
+
 def do_scp(local, remote):
     if _is_verbose:
         print('Transfering "%s" -> "%s"' % (local, remote))
@@ -117,6 +119,7 @@ def main(args):
     all_dirs = utils.without_duplicates(get_targets(args.source))
     for buppable in all_dirs:
         do_backup(args, buppable)
+
 
 def cli():
     main(parse_args(sys.argv))

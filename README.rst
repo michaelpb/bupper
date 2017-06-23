@@ -1,40 +1,71 @@
-======
 bupper
 ======
 
+.. figure:: https://badge.fury.io/py/bupper.png
+   :alt: bupper badge
 
-.. image:: https://img.shields.io/pypi/v/bupper.svg
-        :target: https://pypi.python.org/pypi/bupper
+   bupper badge
 
-.. image:: https://img.shields.io/travis/michaelpb/bupper.svg
-        :target: https://travis-ci.org/michaelpb/bupper
+.. figure:: https://travis-ci.org/michaelpb/bupper.png?branch=master
+   :alt: travis badge
 
-.. image:: https://readthedocs.org/projects/bupper/badge/?version=latest
-        :target: https://bupper.readthedocs.io/en/latest/?badge=latest
-        :alt: Documentation Status
+   travis badge
 
-.. image:: https://pyup.io/repos/github/michaelpb/bupper/shield.svg
-     :target: https://pyup.io/repos/github/michaelpb/bupper/
-     :alt: Updates
+Simple backup application which allows per-directory backup control by
+simply including a ``_BACKUP_THIS`` file.
 
+How it works
+------------
 
-A little backup script, shamelessly reinventing the wheel
+Bupper is very simple: it will recurse through a given directory,
+looking for a special file indicating that it should be backedup
+(``_BACKUP_THIS``), and then it will put that directory into a
+``.tar.gz`` archive, named after the directory and the current time, and
+``scp`` it to a given location.
 
+This has few moving parts and works well for a simple household-backup
+solution, where "whitelisting" a few important directories in your home
+for backup via transfer to a local network host makes the most sense.
 
-* Free software: GNU General Public License v3
-* Documentation: https://bupper.readthedocs.io.
+Installation
+------------
 
+Assuming Python's ``pip`` is installed (for Debian-based systems, this
+can be installed with ``sudo apt-get install python-pip``), bupper can
+be installed directly from PyPI:
 
-Features
---------
+::
 
-* TODO
+    pip install bupper
 
-Credits
----------
+Python versions 3.3+ (and 2.6+) are supported and tested against.
 
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+Quick start
+-----------
 
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+1. Think about how you will configure bupper. The main thing you will
+   want to configure is the ``--remote`` flag, which should be remote
+   host and path, or some sort of external storage, that would allow an
+   SSH login:
 
+   ::
+
+       bupper \
+       --source '/home/'\
+       --remote 'backupuser@remote.host:/var/backups/bupper/'
+
+2. **Note:** that 'source' does not actually back EVERYTHING up in that
+   directory. Instead, it will recursively look for directories that
+   contain a certain filename (``_BACKUP_THIS``).
+
+3. Setup ``bupper`` with your chosen configuration to run on
+   `cron <https://askubuntu.com/questions/2368/how-do-i-set-up-a-cron-job>`__
+   at a regular time (such as daily).
+
+4. (Optional) Add cron jobs that clean up old backups -- this is up to
+   you how you want to do this.
+
+Contributing
+============
+
+New features, tests, and bug fixes are welcome!

@@ -1,87 +1,69 @@
-.PHONY: clean clean-test clean-pyc clean-build docs help
-.DEFAULT_GOAL := help
-define BROWSER_PYSCRIPT
-import os, webbrowser, sys
-try:
-	from urllib import pathname2url
-except:
-	from urllib.request import pathname2url
-
-webbrowser.open("file://" + pathname2url(os.path.abspath(sys.argv[1])))
-endef
-export BROWSER_PYSCRIPT
-
-define PRINT_HELP_PYSCRIPT
-import re, sys
-
-for line in sys.stdin:
-	match = re.match(r'^([a-zA-Z_-]+):.*?## (.*)$$', line)
-	if match:
-		target, help = match.groups()
-		print("%-20s %s" % (target, help))
-endef
-export PRINT_HELP_PYSCRIPT
-BROWSER := python -c "$$BROWSER_PYSCRIPT"
+.PHONY: help clean clean-pyc clean-build build list test test-all coverage release sdist
 
 help:
-	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
+	@echo "clean-build - remove build artifacts"
+	@echo "clean-pyc - remove Python file artifacts"
+	@echo "lint - check style with flake8"
+	@echo "test - run tests quickly with the default Python"
+	@echo "test-all - run tests on every Python version with tox"
+	@echo "build-readme - build the readme file"
+	@echo "bump-and-push - run tests, lint, bump patch, push to git, and release on pypi"
+	@echo "coverage - check code coverage quickly with the default Python"
+	@echo "release - package and upload a release"
+	@echo "sdist - package"
+	@echo "cleanup-pep8 - automatical clean up some linting violations"
 
-clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
+clean: clean-build clean-pyc
 
-
-clean-build: ## remove build artifacts
+clean-build:
 	rm -fr build/
 	rm -fr dist/
-	rm -fr .eggs/
-	find . -name '*.egg-info' -exec rm -fr {} +
-	find . -name '*.egg' -exec rm -f {} +
+	rm -fr *.egg-info
 
-clean-pyc: ## remove Python file artifacts
+clean-pyc:
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
-	find . -name '__pycache__' -exec rm -fr {} +
 
-clean-test: ## remove test and coverage artifacts
-	rm -fr .tox/
-	rm -f .coverage
-	rm -fr htmlcov/
+build-readme:
+	pandoc README.md --to=RST > README.rst
 
-lint: ## check style with flake8
-	flake8 bupper tests
+lint:
+	flake8 bupper test
 
-test: ## run tests quickly with the default Python
+test:
 	py.test
-	
 
-test-all: ## run tests on every Python version with tox
+test-all:
 	tox
 
-coverage: ## check code coverage quickly with the default Python
-	coverage run --source bupper -m pytest
+coverage:
+	coverage run --source bupper setup.py test
 	coverage report -m
 	coverage html
-	$(BROWSER) htmlcov/index.html
+	open htmlcov/index.html
 
-docs: ## generate Sphinx HTML documentation, including API docs
-	rm -f docs/bupper.rst
-	rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ bupper
-	$(MAKE) -C docs clean
-	$(MAKE) -C docs html
-	$(BROWSER) docs/_build/html/index.html
+bump-and-push: test lint
+	bumpversion patch
+	git push
+	git push --tags
+	make release
 
-servedocs: docs ## compile the docs watching for changes
-	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .
+build: clean
+	python3 setup.py sdist
+	python3 setup.py bdist_wheel
 
-release: clean ## package and upload a release
-	python setup.py sdist upload
-	python setup.py bdist_wheel upload
+cleanup-pep8:
+	autoflake --in-place --remove-all-unused-imports --remove-unused-variables -r bupper
+	autoflake --in-place --remove-all-unused-imports --remove-unused-variables -r test
+	autopep8 --in-place -r bupper
+	autopep8 --in-place -r test
 
-dist: clean ## builds source and wheel package
-	python setup.py sdist
-	python setup.py bdist_wheel
+release: clean
+	python3 setup.py sdist upload
+	python3 setup.py bdist_wheel upload
+
+sdist: clean
+	python3 setup.py sdist
+	python3 setup.py bdist_wheel upload
 	ls -l dist
-
-install: clean ## install the package to the active Python's site-packages
-	python setup.py install

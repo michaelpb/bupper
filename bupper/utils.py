@@ -1,6 +1,7 @@
 import os
 import datetime
 
+
 def without_duplicates(iterable):
     seen = set()
     for item in iterable:
@@ -28,6 +29,7 @@ def get_backup_archive_filename(date_format, path):
     slug = backup_filename_slug(path)
     return '%s__%s.tar.gz' % (datetime_string, slug)
 
+
 def makedirs_to(path):
     '''
     Make directories to include the given pathname
@@ -36,6 +38,7 @@ def makedirs_to(path):
         os.makedirs(os.path.dirname(path))
     except OSError:
         pass
+
 
 def get_datetime_string(date_format):
     '''

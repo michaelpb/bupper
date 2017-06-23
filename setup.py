@@ -1,58 +1,64 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
-"""The setup script."""
+import os
+import sys
 
-from setuptools import setup, find_packages
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
 
-with open('README.rst') as readme_file:
-    readme = readme_file.read()
 
-with open('HISTORY.rst') as history_file:
-    history = history_file.read()
+if sys.argv[-1] == 'publish':
+    os.system('python setup.py sdist upload')
+    sys.exit()
 
-requirements = [
-    # TODO: put package requirements here
-]
+readme = open('README.rst').read()
 
-setup_requirements = [
-    'pytest-runner',
-    # TODO(michaelpb): put setup requirements (distutils extensions, etc.) here
-]
-
-test_requirements = [
-    'pytest',
-    # TODO: put package test requirements here
-]
+# doclink = """
+# Documentation
+# -------------
+#
+# The full documentation is at http://bupper.rtfd.org."""
+# history = open('HISTORY').read().replace('.. :changelog:', '')
+doclink = ''
+history = ''
 
 setup(
     name='bupper',
     version='0.1.0',
-    description="A little backup script, shamelessly reinventing the wheel",
-    long_description=readme + '\n\n' + history,
-    author="michaelb",
+    description='Very simple backup application intended to be run on '
+                'cron to allow user-controllable remote backups',
+    long_description=readme + '\n\n' + doclink + '\n\n' + history,
+    author='michaelb',
     author_email='michaelpb@gmail.com',
     url='https://github.com/michaelpb/bupper',
-    packages=find_packages(include=['bupper']),
-    include_package_data=True,
-    install_requires=requirements,
-    license="GNU General Public License v3",
-    zip_safe=False,
+    packages=[
+        'bupper',
+    ],
+    entry_points={
+        'console_scripts': ['bupper=bupper.bupper:cli'],
+    },
+    package_dir={'bupper': 'bupper'},
+    install_requires=[],
+    license='GPL3',
     keywords='bupper',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+        'Intended Audience :: End Users/Desktop',
+        "Environment :: Console",
         'Natural Language :: English',
-        "Programming Language :: Python :: 2",
+        'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: Implementation :: PyPy',
+        'License :: OSI Approved :: '
+        'GNU General Public License v3 or later (GPLv3+)',
     ],
-    test_suite='tests',
-    tests_require=test_requirements,
-    setup_requires=setup_requirements,
 )
