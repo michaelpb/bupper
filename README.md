@@ -54,6 +54,25 @@ regular time (such as daily).
 4. (Optional) Add cron jobs that clean up old backups -- this is up to you how
 you want to do this.
 
+# Full usage
+
+```
+usage: bupper [-h] [-d DATE_FORMAT] [-v] [-s SOURCE] [-l LOCAL] [-r REMOTE]
+
+Simple backup script, no diffing or anything fancy.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -d DATE_FORMAT, --date-format DATE_FORMAT
+                        date format in strftime
+  -v, --verbose         increase output verbosity
+  -s SOURCE, --source SOURCE
+                        source directory to scan for bupper configs
+  -l LOCAL, --local LOCAL
+                        local storage of backups
+  -r REMOTE, --remote REMOTE
+                        remote storage of backups
+```
 
 # Contributing
 
